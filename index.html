@@ -3,33 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <title>Vehicle Registry</title>
+ 
 <style>
 body{
-font-family: Arial, sans-serif;
+font-family:Arial,sans-serif;
 text-align:center;
 margin-top:100px;
 }
+ 
 input{
-padding:8px;
-font-size:18px;
+padding:10px;
+font-size:20px;
 }
+ 
 button{
 padding:10px 20px;
-font-size:18px;
+font-size:20px;
 margin-left:10px;
 }
+ 
 #result{
 margin-top:40px;
-font-size:28px;
-line-height:1.8;
+font-size:30px;
+line-height:2;
 }
 </style>
+ 
 </head>
+ 
 <body>
  
 <div id="login">
 <input type="password" id="pwd" placeholder="Password">
-<button onclick="checkPassword()">Enter</button>
+<button id="btn">Enter</button>
 </div>
  
 <div id="result"></div>
@@ -38,45 +44,60 @@ line-height:1.8;
  
 const PASSWORD = "R@dar242026b";
  
+document.getElementById("btn").addEventListener("click", checkPassword);
+ 
 function checkPassword(){
  
-const p=document.getElementById("pwd").value;
+const p = document.getElementById("pwd").value;
  
-if(p!==PASSWORD){
+if(p !== PASSWORD){
 alert("Wrong password");
 return;
 }
  
-const params=new URLSearchParams(window.location.search);
-const id=params.get("id");
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
  
 fetch("FleetRegistry20261009.csv")
-.then(r=>r.text())
-.then(data=>{
+.then(response => response.text())
+.then(data => {
  
-const rows=data.split("\n");
+const rows = data.split(/\r?\n/);
  
 for(let i=1;i<rows.length;i++){
  
-const cols=rows[i].trim().split(";");
+const cols = rows[i].split(";");
  
-if(cols.length<5) continue;
+if(cols.length < 5){
+continue;
+}
  
-if(cols[0]===id){
+if(cols[0].trim() === id){
  
 document.getElementById("login").style.display="none";
  
-document.getElementById("result").innerHTML=
-cols[1] + "<br><br>" +
-cols[4] + "<br><br>" +
-cols[3];
+document.getElementById("result").innerHTML =
+cols[1].trim() +
+"<br><br>" +
+cols[4].trim() +
+"<br><br>" +
+cols[3].trim();
  
 return;
 }
 }
  
-document.getElementById("result").innerHTML="Record not found";
- 
+document.getElementById("result").innerHTML =
+"Record not found";
+})
+.catch(error => {
+alert("CSV ERROR");
+console.log(error);
 });
  
 }
+ 
+</script>
+ 
+</body>
+</html>
