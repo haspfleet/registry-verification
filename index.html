@@ -6,108 +6,100 @@
 
 <style>
 body{
-    font-family: Arial, sans-serif;
-    text-align:center;
-    margin-top:100px;
+font-family:Arial,sans-serif;
+text-align:center;
+margin-top:100px;
 }
 
 input{
-    padding:10px;
-    font-size:18px;
+padding:10px;
+font-size:20px;
 }
 
 button{
-    padding:10px 20px;
-    font-size:18px;
+padding:10px 20px;
+font-size:20px;
 }
 
 #result{
-    margin-top:40px;
-    font-size:28px;
-    line-height:2;
+margin-top:40px;
+font-size:30px;
+line-height:2;
 }
 </style>
-
 </head>
 
 <body>
 
 <div id="login">
-    <input type="password" id="pwd" placeholder="Password">
-    <button id="btn">Enter</button>
+<input type="password" id="pwd" placeholder="Password">
+<button id="btn">Enter</button>
 </div>
 
 <div id="result"></div>
 
 <script>
 
-const PASSWORD = "R@dar242026b";
+const PASSWORD="R@dar242026b";
 
-document.getElementById("btn").addEventListener("click", checkPassword);
+document.getElementById("btn").addEventListener("click",checkPassword);
 
-function checkPassword() {
+function clean(t){
+return t.replace(/\uFEFF/g,"").trim();
+}
 
-    const p = document.getElementById("pwd").value;
+function checkPassword(){
 
-    if (p !== PASSWORD) {
-        alert("Wrong password");
-        return;
-    }
+const p=document.getElementById("pwd").value;
 
-    const params = new URLSearchParams(window.location.search);
-    const id = (params.get("id") || "").trim();
+if(p!==PASSWORD){
+alert("Wrong password");
+return;
+}
 
-    fetch("FleetRegistry20261009.csv")
-    .then(response => response.text())
-    .then(data => {
+const params=new URLSearchParams(window.location.search);
+const id=clean(params.get("id")||"");
 
-        const rows = data.split(/\r?\n/);
+fetch("FleetRegistry20261009.csv")
+.then(r=>r.text())
+.then(data=>{
 
-        for (let i = 1; i < rows.length; i++) {
+const rows=data.split(/\r?\n/);
 
-            const cols = rows[i].split(";");
+for(let i=1;i<rows.length;i++){
 
-            if (cols.length < 5) {
-                continue;
-            }
+const cols=rows[i].split(";");
 
-            const currentId = cols[0].trim();
+if(cols.length<5) continue;
 
-            if (currentId === id) {
+const currentId=clean(cols[0]);
 
-                document.getElementById("login").style.display = "none";
+if(currentId===id){
 
-                document.getElementById("result").innerHTML =
-                    cols[1].trim() +
-                    "<br><br>" +
-                    cols[4].trim() +
-                    "<br><br>" +
-                    cols[3].trim();
+document.getElementById("login").style.display="none";
 
-                return;
-            }
-        }
+document.getElementById("result").innerHTML=
+clean(cols[1])+
+"<br><br>"+
+clean(cols[4])+
+"<br><br>"+
+clean(cols[3]);
 
-        let debug = "";
+return;
+}
+}
 
-        for (let i = 1; i < Math.min(rows.length,10); i++) {
-            const cols = rows[i].split(";");
-            debug += cols[0] + "<br>";
-        }
+document.getElementById("result").innerHTML="Record not found";
 
-        document.getElementById("result").innerHTML =
-            "Record not found<br><br>ID searched: " +
-            id +
-            "<br><br>Available IDs:<br>" +
-            debug;
+})
+.catch(err=>{
 
-    })
-    .catch(error => {
+document.getElementById("result").innerHTML=
+"CSV ERROR";
 
-        document.getElementById("result").innerHTML =
-            "CSV ERROR<br><br>" + error;
+console.log(err);
 
-    });
+});
 
 }
 
