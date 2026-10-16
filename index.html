@@ -76,12 +76,54 @@ button {
         width: 90%;
     }
 }
-</style>
-</head>
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+}
+
+.password-wrapper input {
+    padding-right: 44px;
+}
+
+#togglePassword {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 4px;
+    border: none;
+    background: transparent;
+    color: #003b75;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#eyeIcon {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+</style></head>
 <body>
 
 <div id="login">
-    <input type="password" id="pwd" placeholder="Password">
+    <div class="password-wrapper">
+        <input type="password" id="pwd" placeholder="Password">
+        <button id="togglePassword" type="button" aria-label="Show password">
+            <svg id="eyeIcon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        </button>
+    </div>
     <button id="btn" type="button">Enter</button>
 </div>
 
@@ -91,7 +133,19 @@ button {
 const API_URL = "https://haspfleet-registry-api.ek-hcaa.workers.dev/verify";
 
 document.getElementById("btn").addEventListener("click", checkPassword);
+document.getElementById("togglePassword").addEventListener("click", function() {
+    const passwordInput = document.getElementById("pwd");
+    const eyeIcon = document.getElementById("eyeIcon");
+    const showingPassword = passwordInput.type === "password";
 
+    passwordInput.type = showingPassword ? "text" : "password";
+
+    eyeIcon.innerHTML = showingPassword
+        ? '<path d="M3 3l18 18"></path><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path><path d="M9.9 5.2A10.8 10.8 0 0 1 12 5c6.4 0 10 7 10 7a15.5 15.5 0 0 1-3.1 3.9"></path><path d="M6.2 6.2C3.5 8 2 12 2 12s3.6 7 10 7a10.6 10.6 0 0 0 4-.8"></path>'
+        : '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>';
+
+    this.setAttribute("aria-label", showingPassword ? "Hide password" : "Show password");
+});
 document.getElementById("pwd").addEventListener("keydown", function(event) {
     if (event.key === "Enter") checkPassword();
 });
