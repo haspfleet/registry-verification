@@ -118,9 +118,23 @@ button {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+#appTitle {
+    position: absolute;
+    top: 7%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 94%;
+    margin: 0;
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: bold;
+    color: #003b75;
+    text-align: center;
+    line-height: 1.15;
+    z-index: 1;
+}
 </style></head>
 <body>
-
+<h1 id="appTitle">HASP Fleet Registry</h1>
 <div id="login">
     <div class="password-wrapper">
         <input type="password" id="pwd" placeholder="Password">
