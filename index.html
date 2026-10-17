@@ -197,13 +197,15 @@ async function checkPassword() {
 
         result.replaceChildren();
 
-        result.appendChild(document.createTextNode(clean(data.icao)));
+result.appendChild(document.createTextNode(clean(data.icao)));
 result.appendChild(document.createElement("br"));
+
 result.appendChild(document.createTextNode(clean(data.call_sign)));
 result.appendChild(document.createElement("br"));
+
 result.appendChild(document.createTextNode(clean(data.plate)));
 
-        login.style.display = "none";
+login.style.display = "none";
 
     } catch (error) {
         console.error("Registry error:", error);
